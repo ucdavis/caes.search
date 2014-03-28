@@ -7,7 +7,7 @@
     i18n_domain="caes.search">
 
     <includeDependencies package="." />
-
+    <include file="profiles.zcml" />
 
     <plone:behavior
         title="Splash Result"
