@@ -7,12 +7,18 @@
     i18n_domain="caes.search">
 
     <includeDependencies package="." />
+
+
     <plone:behavior
         title="Splash Result"
         description="Indicate which keywords this content type returns a splash search result, plus chose a banner for the splash"
         provides=".splash.ISplashU"
+        marker=".splash.ISplashU"
         factory=".splash.Splash"
         for="plone.dexterity.interfaces.IDexterityContent"
         />
+
+    <adapter name="splash_keywords" 
+             factory=".indexers.splash_keywords" />
 
 </configure>
