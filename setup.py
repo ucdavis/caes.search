@@ -19,6 +19,8 @@ setup(name='caes.search',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.namedfile',
+          'plone.formwidget.namedfile',
       ],
       extras_require={
       },

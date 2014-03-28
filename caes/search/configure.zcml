@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="caes.search">
+
+    <includeDependencies package="." />
+    <plone:behavior
+        title="Splash Result"
+        description="Indicate which keywords this content type returns a splash search result, plus chose a banner for the splash"
+        provides=".splash.ISplashU"
+        factory=".splash.Splash"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+</configure>
