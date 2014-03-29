@@ -21,6 +21,8 @@ setup(name='caes.search',
           'setuptools',
           'plone.namedfile',
           'plone.formwidget.namedfile',
+          'plone.api',
+          'caes.contact',
       ],
       extras_require={
       },

@@ -8,6 +8,8 @@
 
     <includeDependencies package="." />
     <include file="profiles.zcml" />
+    <include package=".browser" />
+
 
     <plone:behavior
         title="Splash Result"
