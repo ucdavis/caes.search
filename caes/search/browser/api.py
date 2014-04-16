@@ -17,19 +17,36 @@ class CaesSearchResults(BrowserView):
     serialize the search results and then return as json
     """
     def __call__(self):
-        if not self.needle:
-            results = {}
-        else:
-            results = search.haystack(self.needle,
-                                      category=self.category)
-        self.request.response.setHeader('Content-Type',
-                                        'application/json; charset=utf-8')
+        if self.json:
+            self.request.response.setHeader('Content-Type',
+                                            'application/json; charset=utf-8')
+            return json.dumps(self.results, default=dt_handler)
+        self._results = {}
+        return self.index()
 
-        return json.dumps(results, default=dt_handler)
+    # TODO: throw a memoize up here
+    @property
+    def results(self):
+        if not self.needle:
+            return {}
+        else:
+            return search.haystack(self.needle,
+                                   facet=self.category)
+
+    @property
+    def all_facets(self):
+        return search.default_facets().keys()
+
+    def facet_selected(self, facet):
+        return facet in self.results.keys()
 
     @property
     def needle(self):
         return self.form_attr('needle')
+
+    @property
+    def json(self):
+        return self.form_attr('json')
 
     @property
     def category(self):

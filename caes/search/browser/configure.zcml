@@ -9,7 +9,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".api.CaesSearchResults"
       permission="zope2.View"
+      template="templates/search.pt"
       />
-
 
 </configure>

@@ -4,26 +4,29 @@ from caes.contact.contact import Contact
 from plone.dexterity.interfaces import IDexterityContent
 
 
-def haystack(needle, category=None):
+def default_facets():
+    # TODO: make a configuration panel for these
+    return {'Faculty': {},
+            'Department': {},
+            'Major': {},
+            'Center': {},
+            'News Item': {},
+            'Group': {},
+            'Other': {},
+            }
+
+
+def haystack(needle, facet=None):
     """
     Given a keyword, return the right results.
-    These should be ordered by type. Will need to figure that out
-    for long term workings because category need not
-    100% be mapped to certain types
+    These should be ordered by type.
 
     @category means to only include a certain category (aka type)
+    this is complicated by the fact that we always want to know the
+    size of other categories on the front end. 
     """
     # default categories
-    categories = {'Faculty': {},
-                  'Department': {},
-                  'Major': {},
-                  'Center': {},
-                  'News Item': {},
-                  'Group': {},
-                  'Other': {},
-                  }
-    if category:
-        categories = {category: {} }
+    categories = default_facets()
 
     catalog = api.portal.get_tool(name='portal_catalog')
 
@@ -38,31 +41,38 @@ def haystack(needle, category=None):
                        'other': [],
                        'num_results': 0,
                        }
+        include_full_results = facet and category == facet
+        limit = 10
+        if include_full_results:
+            limit = 50
         """
         Look for Splashes
         """
         contentFilter = {'splash_keywords': needle, 'Type': category}
-        for brain in catalog.searchResults(contentFilter):
-            cat_results['splash'].append(marshall_brain(brain))
+        for brain in catalog.searchResults(contentFilter)[:limit]:
+            if include_full_results:
+                cat_results['splash'].append(marshall_brain(brain))
             uid_results.append(brain.UID)
 
         """
         Look for Keywords
         """
         for brain in catalog.searchResults(Subject=needle,
-                                           Type=category):
+                                           Type=category)[:limit]:
             if brain.UID not in uid_results:
-                cat_results['tags'].append(marshall_brain(brain))
                 uid_results.append(brain.UID)
+                if include_full_results:
+                    cat_results['tags'].append(marshall_brain(brain))
 
         """
         Look for Other Searchable text
         """
         for brain in catalog.searchResults(SearchableText=needle,
-                                           Type=category):
+                                           Type=category)[:limit]:
             if brain.UID not in uid_results:
-                cat_results['other'].append(marshall_brain(brain))
                 uid_results.append(brain.UID)
+                if include_full_results:
+                    cat_results['other'].append(marshall_brain(brain))
 
         cat_results['num_results'] = len(uid_results)
         categories[category] = cat_results
