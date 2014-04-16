@@ -23,12 +23,14 @@ def haystack(needle, facet=None):
 
     @category means to only include a certain category (aka type)
     this is complicated by the fact that we always want to know the
-    size of other categories on the front end. 
+    size of other categories on the front end.
     """
-    # default categories
     categories = default_facets()
 
     catalog = api.portal.get_tool(name='portal_catalog')
+    limit = 10
+    if facet:
+        limit = 50
 
     for category in categories.keys():
         """
@@ -41,10 +43,7 @@ def haystack(needle, facet=None):
                        'other': [],
                        'num_results': 0,
                        }
-        include_full_results = facet and category == facet
-        limit = 10
-        if include_full_results:
-            limit = 50
+        include_full_results = (facet and category == facet) or not facet
         """
         Look for Splashes
         """
