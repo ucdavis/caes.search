@@ -35,7 +35,7 @@ class CaesSearchResults(BrowserView):
 
     @property
     def all_facets(self):
-        return search.default_facets().keys()
+        return search.default_facets()
 
     def facet_selected(self, facet):
         return facet in self.results.keys()

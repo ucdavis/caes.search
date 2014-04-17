@@ -10,7 +10,8 @@
 <body>
 <div metal:fill-slot="content">
 
-<div id="content" tal:define="results   view/results">
+<div id="content" tal:define="results   view/results;
+                              toLocalizedTime   nocall:context/@@plone/toLocalizedTime; ">
 <h1 class="documentFirstHeading">
 Search Results for <span class="search-term" tal:content="view/needle"/>
 </h1>
@@ -26,7 +27,52 @@ Search Results for <span class="search-term" tal:content="view/needle"/>
 </div>
 
 <div class="search-results">
-  <div tal:content="results"/>
+  <tal:results repeat="result  results">
+  <div tal:condition="python:results[result]['num_results'] and (not(view.category) or view.category == result)" 
+       class="result-section">
+    <h2>${result}</h2>
+    <div class="${result}-results splash"
+         tal:define="splashes python:results[result]['splash']"
+         tal:condition="python:len(splashes)">
+      <tal:splash repeat="splash splashes">
+        <h3><a href="${splash/url}">${splash/title}</a></h3>
+        <a href="${splash/url}">
+           <img src="${splash/banner}" tal:condition="splash/banner" />
+        </a>
+        <div class="contact-info" tal:condition="splash/contact"
+             tal:content="structure splash/contact"/>
+        <div class="result-byline">
+          <a href="${splash/url}">${splash/url}</a>
+        </div>
+        <p class="result-summary">${splash/summary}</p>
+      </tal:splash>
+    </div>
+    <div class="${result}-results tagged"
+         tal:define="tagged_results  python:results[result]['tags']"
+         tal:condition="python:len(tagged_results)">
+      <tal:tagged repeat="tagged tagged_results">
+        <h3><a href="${tagged/url}">${tagged/title}</a></h3>
+        <p class="result-summary">${tagged/summary}</p>
+      </tal:tagged>
+    </div>
+    <div class="${result}-results other"
+         tal:define="other_results  python:results[result]['other']"
+         tal:condition="python:len(other_results)">
+      <tal:tagged repeat="other other_results">
+        <h3><a href="${other/url}">${other/title}</a></h3>
+        <a tal:condition="python:other['type'] == 'News Item'"
+           href="${other/url}">
+           <img src="${other/banner}" class="news-item-preview"/>
+        </a>
+        <div class="result-byline">
+          &mdash; by <a class="result-author" href="author/${other/author}">${other/author}</a>
+          &mdash; last modified ${python:toLocalizedTime(other['modified'])}
+        </div>
+        <p class="result-summary">${other/summary}</p>
+      </tal:tagged>
+    </div>
+   </div>
+  </tal:results>
 </div>
 
 </div>
