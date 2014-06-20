@@ -2,6 +2,7 @@ import json
 import datetime
 from Products.Five.browser import BrowserView
 from caes.search import search
+import plone.api
 
 
 def dt_handler(obj):
@@ -58,3 +59,7 @@ class CaesSearchResults(BrowserView):
         if raise_on_missing:
             raise AttributeError
         return None
+
+    @property
+    def portal_url(self):
+        return plone.api.portal.get().absolute_url()

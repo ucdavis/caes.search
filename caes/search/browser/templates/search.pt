@@ -12,15 +12,24 @@
 
 <div id="content" tal:define="results   view/results;
                               toLocalizedTime   nocall:context/@@plone/toLocalizedTime; ">
-<h1 class="documentFirstHeading">
-Search Results for <span class="search-term" tal:content="view/needle"/>
+
+<div class="search-for-all-the-things">
+  <form action="${view/portal_url}/haystack" method="get">
+    <input type="text" name="needle" value="${view/needle | nothing}" 
+           placeholder="Search for departments, faculty, or bees..."/>
+    <input type="submit" value="Go!"/>
+  </form>
+</div>
+<h1 class="documentFirstHeading" tal:condition="view/needle">
+Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&rdquo;
 </h1>
 
 <div class="search-results-facet">
   <ul>
     <tal:facets repeat="facet view/all_facets">     
-    <li class="${python:view.facet_selected(facet) and 'facet-on' or 'facet-off'}">
-      <a href="?needle=${view/needle}&category=${facet}">${facet} (${python:results[facet]['num_results']})</a>
+    <li class="${python:view.facet_selected(facet) and 'facet-on' or 'facet-off'}"
+        tal:condition="python: facet in results">
+      <a href="${view/portal_url}/haystack?needle=${view/needle}&category=${facet}">${facet} (${python:results[facet]['num_results']})</a>
     </li>
     </tal:facets>
   </ul>
