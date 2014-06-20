@@ -39,7 +39,7 @@ class CaesSearchResults(BrowserView):
         return search.default_facets()
 
     def facet_selected(self, facet):
-        return facet in self.results.keys()
+        return facet == self.category
 
     @property
     def needle(self):
