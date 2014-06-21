@@ -1,12 +1,15 @@
 from plone.indexer.decorator import indexer
 from caes.search.splash import ISplashU
 import logging
+import re
 
 
 @indexer(ISplashU)
 def splash_keywords(object):
     try:
-        return object.keywords
+        # handle poorly entered keywords
+        keywords = " ".join(object.keywords)
+        return re.split('\W+', keywords)
     except AttributeError, e:
         logging.errror("Tried to index an object with ISplashU interface,'+ \
                       ' but no keywords item - %s: %s" % (object.absolute_url(),
