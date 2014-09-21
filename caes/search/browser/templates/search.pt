@@ -38,9 +38,10 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
 <div class="search-results">
   <tal:results repeat="result  results">
   <div tal:condition="python:results[result]['num_results'] and (not(view.category) or view.category == result)" 
-       class="result-section">
+       class="result-section"
+       tal:define="friendly_id python:results[result]['friendly_id']">
     <h2>${result}</h2>
-    <div class="${result}-results splash"
+    <div class="${friendly_id}-results splash"
          tal:define="splashes python:results[result]['splash']"
          tal:condition="python:len(splashes)">
       <tal:splash repeat="splash splashes">
@@ -56,7 +57,7 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
         <p class="result-summary">${splash/summary}</p>
       </tal:splash>
     </div>
-    <div class="${result}-results tagged"
+    <div class="${friendly_id}-results tagged"
          tal:define="tagged_results  python:results[result]['tags']"
          tal:condition="python:len(tagged_results)">
       <tal:tagged repeat="tagged tagged_results">
@@ -64,7 +65,7 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
         <p class="result-summary">${tagged/summary}</p>
       </tal:tagged>
     </div>
-    <div class="${result}-results other"
+    <div class="${friendly_id}-results other"
          tal:define="other_results  python:results[result]['other']"
          tal:condition="python:len(other_results)">
       <tal:tagged repeat="other other_results">

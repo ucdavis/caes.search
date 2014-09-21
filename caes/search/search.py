@@ -36,6 +36,7 @@ def haystack(needle, facet=None):
     uid_results = []
     for category in default_facets():
         categories[category] = {}
+        friendly_id = category.replace(" ", "").lower()
 
         """
         We need to make sure we aren't adding things in multiple times
@@ -45,6 +46,7 @@ def haystack(needle, facet=None):
                        'tags': [],
                        'other': [],
                        'num_results': 0,
+                       'friendly_id': friendly_id
                        }
         include_full_results = (facet and category == facet) or not facet
 
