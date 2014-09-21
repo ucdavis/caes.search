@@ -27,11 +27,14 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
 <div class="search-results-facet">
   <ul>
     <tal:facets repeat="facet view/all_facets">     
-    <li class="${python:view.facet_selected(facet) and 'facet-on' or 'facet-off'}"
-        tal:condition="python: facet in results">
-      <a href="${view/portal_url}/haystack?needle=${view/needle}&category=${facet}">${facet} (${python:results[facet]['num_results']})</a>
+    <li class="${python:is_selected and 'facet-on' or 'facet-off'} ${python:has_results and 'has-results' or 'no-results'}"
+        tal:condition="python: facet in results"
+        tal:define="num_results python:results[facet]['num_results'];
+                    has_results python:num_results > 0;
+                    is_selected python:view.facet_selected(facet)">
+      <a href="${view/portal_url}/haystack?needle=${view/needle}&category=${facet}">${facet} (${python:num_results})</a>
       <span class="clear-facet"
-            tal:condition="python:view.facet_selected(facet)">
+            tal:condition="is_selected">
         <a href="${view/portal_url}/haystack?needle=${view/needle}">x</a>
       </span>
     </li>
