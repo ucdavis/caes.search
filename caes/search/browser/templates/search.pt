@@ -82,8 +82,8 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
            <img src="${other/banner}" class="news-item-preview"/>
         </a>
         <div class="result-byline">
-          &mdash; by <a class="result-author" href="author/${other/author}">${other/author}</a>
-          &mdash; last modified ${python:toLocalizedTime(other['modified'])}
+          <span class="result-byline-author">&mdash; by <a class="result-author" href="author/${other/author}">${other/author}</a></span>
+          <span class="result-byline-date">&mdash; ${python:toLocalizedTime(other['effective'])}</span>
         </div>
         <p class="result-summary">${other/summary}</p>
       </tal:tagged>

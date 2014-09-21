@@ -118,6 +118,7 @@ def marshall_brain(brain):
     result['keywords'] = brain.Subject
     result['author'] = brain.Creator
     result['modified'] = brain.ModificationDate
+    result['effective'] = brain.EffectiveDate
     result['contact'] = ""
     if IDexterityContent.providedBy(sobj):
         result['contact'] = Contact(sobj).contact
