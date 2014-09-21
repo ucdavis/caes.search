@@ -44,11 +44,23 @@ def haystack(needle, facet=None):
         """
         cat_results = {'splash': [],
                        'tags': [],
+                       'faculty': [],
                        'other': [],
                        'num_results': 0,
                        'friendly_id': friendly_id
                        }
         include_full_results = (facet and category == facet) or not facet
+
+        if category == 'Faculty':
+            for brain in catalog.searchResults(SearchableText=needle,
+                                               portal_type="FSDPerson")[:limit]:
+                if brain.UID not in uid_results:
+                    uid_results.append(brain.UID)
+                    cat_results['num_results'] += 1
+                    if include_full_results:
+                        cat_results['faculty'].append(marshall_faculty(brain))
+            categories[category] = cat_results
+            continue
 
         """
         Handle the "Other" Category. Basically, anything we may have missed.
@@ -56,6 +68,8 @@ def haystack(needle, facet=None):
         """
         if category == 'Other':
             for brain in catalog.searchResults(SearchableText=needle)[:limit]:
+                if brain.portal_type == 'FSDPerson':
+                    continue
                 if brain.UID not in uid_results:
                     uid_results.append(brain.UID)
                     cat_results['num_results'] += 1
@@ -124,3 +138,14 @@ def marshall_brain(brain):
         result['contact'] = Contact(sobj).contact
     return result
 
+
+def marshall_faculty(brain):
+    result = {}
+    sobj = brain.getObject()
+    result['name'] = "%s %s" % (sobj.firstName, sobj.lastName)
+    result['titles'] = [x for x in sobj.jobTitles]
+    result['url'] = brain.getURL()
+    result['image_url'] = sobj.image.absolute_url()
+    result['phone'] = sobj.officePhone
+    result['email'] = sobj.email
+    return result

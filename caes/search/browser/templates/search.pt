@@ -64,6 +64,30 @@ Search Results for &ldquo;<span class="search-term" tal:content="view/needle"/>&
         <p class="result-summary">${splash/summary}</p>
       </tal:splash>
     </div>
+    <div class="${friendly_id}-results faculty"
+         tal:define="faculty_results  python:results[result]['faculty']"
+         tal:condition="python:len(faculty_results)">
+      <tal:tagged repeat="person faculty_results">
+        <div class="listing">
+          <div class="fsd-headshot">
+            <a href="${person/url}">
+              <img src="${person/image_url}" class="fsd-pretty-face"/>
+            </a>
+          </div>
+          <div class="fsd-details">
+            <h4><a href="${person/url}">${person/name}</a></h4>
+            <ul class="jobTitle">
+              <tal:titleloop repeat="title person/titles">
+                <li>${title}</li>
+              </tal:titleloop>
+            </ul>
+            <div class="officePhone">${person/phone}</div>
+            <div class="email"><a href="mailto:${person/email}">${person/email}</a></div>
+          </div>
+          <div class="visualClear"/>
+        </div>
+      </tal:tagged>
+    </div>
     <div class="${friendly_id}-results tagged"
          tal:define="tagged_results  python:results[result]['tags']"
          tal:condition="python:len(tagged_results)">
